@@ -2,7 +2,6 @@ package websocket
 
 import (
 	"github.com/gorilla/websocket"
-	"log"
 	"net/http"
 	"net/url"
 	"sync"
@@ -120,7 +119,7 @@ func (c *Client) pingLoop(t time.Duration) {
 		select {
 		case <-ticker.C:
 			if err = c.wsConnect.WriteMessage(websocket.PingMessage, nil); err != nil {
-				log.Println("[error] send ping error:", err)
+				_ = c.Close()
 			}
 		case <-c.closeChan:
 			return

@@ -4,7 +4,6 @@ import (
 	"github.com/gorilla/websocket"
 	"golang.org/x/sync/errgroup"
 	"io"
-	"log"
 	"math/rand"
 	"strconv"
 	"time"
@@ -43,7 +42,6 @@ func (s *Server) Register(key string, conn *websocket.Conn) *Client {
 		_ = c.Close()
 	}
 	s.clients[key] = client
-	log.Printf("client %s is registered\n", key)
 
 	return client
 }
@@ -57,7 +55,6 @@ func (s *Server) RegisterWithKey(conn *websocket.Conn) (key string, client *Clie
 // 取消注册客户端
 func (s *Server) Unregister(key string) {
 	delete(s.clients, key)
-	log.Printf("client %s is unregistered", key)
 }
 
 // 向所有客户端广播
