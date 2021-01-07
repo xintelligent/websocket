@@ -115,9 +115,15 @@ func (c *Client) writeLoop() {
 func (c *Client) pingLoop(t time.Duration) {
 	ticker := time.NewTicker(t)
 	defer func() { ticker.Stop() }()
-	for range ticker.C {
-		if err := c.wsConnect.WriteMessage(websocket.PingMessage, nil); err != nil {
-			log.Println("[error] send ping error:", err)
+	var err error
+	for {
+		select {
+		case <-ticker.C:
+			if err = c.wsConnect.WriteMessage(websocket.PingMessage, nil); err != nil {
+				log.Println("[error] send ping error:", err)
+			}
+		case <-c.closeChan:
+			return
 		}
 	}
 }
